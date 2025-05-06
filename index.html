@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriQuiz 4S</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+</head>
+<body>
+    <div class="background-animation"></div>
+    <div class="container">
+        <header>
+            <h1 id="titulo" class="animate__animated animate__fadeInDown">NutriQuiz <span>4S</span></h1>
+            <p class="subtitle">JUEGA Y APRENDE</p>
+        </header>
+
+        <main>
+            <div id="inicio" class="screen">
+                <img src="imagenes-png/4251971.png" alt="Nutrición" class="food-icon animate__animated animate__bounce">
+                <button id="boton-empezar" class="btn-primary animate__animated animate__pulse">¡Comenzar!</button>
+            </div>
+            <div id="ruleta-container" class="screen hidden">
+                <div class="ruleta">
+                    <!-- Ruleta de colores (fondo) -->
+                    <div class="ruleta-plato"></div>
+                    
+                    <!-- Ruleta de iconos (transparente) -->
+                    <div class="ruleta-iconos"></div>
+                    
+                    <!-- Aguja -->
+                    <div class="ruleta-aguja"></div>
+                </div>
+                <div class="ruleta-mensaje">Seleccionando pregunta...</div>
+            </div>
+
+            <div id="pregunta" class="screen hidden"></div>
+
+            <div id="opciones" class="hidden">
+                <div class="options-grid"></div>
+            </div>
+
+            <div id="resultado" class="screen hidden">
+                <img id="imagen-resultados" src="" alt="" class="result-icon">
+                <div id="mensaje-resultados"></div>
+                <button id="boton-siguiente" class="btn-secondary">Siguiente Pregunta</button>
+            </div>
+        </main>
+
+        <footer>
+            <p>© 2025 NutriQuiz 4S - COME 4S</p>
+        </footer>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

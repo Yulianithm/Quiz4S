@@ -1,0 +1,430 @@
+:root {
+    --primary-color: #4CAF50;
+    --secondary-color: #81C784;
+    --dark-green: #388E3C;
+    --text-color: #333;
+    --bg-color: #f9f9f9;
+    --white: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+.background-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(255, 255, 255, 0.3) 100%);
+    z-index: -1;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+}
+
+header {
+    margin-bottom: 2rem;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+h1 span {
+    color: var(--dark-green);
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    color: #666;
+}
+
+.screen {
+    background: var(--white);
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    margin: 1rem 0;
+}
+
+#inicio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    padding: 2rem;
+}
+
+.food-icon {
+    width: 200px;
+    height: 200px;
+    animation: bounce 2s infinite;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+}
+
+.food-icon:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 8px rgba(76, 175, 80, 0.5));
+}
+
+@media (max-width: 768px) {
+    .food-icon {
+        width: 120px;
+        height: 120px;
+    }
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+}
+
+.btn-primary:hover {
+    background: var(--dark-green);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+}
+
+.btn-secondary {
+    background: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 1.5rem;
+}
+
+.btn-secondary:hover {
+    background: var(--dark-green);
+}
+
+.btn-sonido {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    transition: all 0.3s;
+}
+
+.btn-sonido:hover {
+    background: var(--dark-green);
+    transform: scale(1.05);
+}
+
+.btn-sonido.active {
+    background: var(--dark-green);
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.5);
+}
+
+/* Contenedor principal de la ruleta */
+.ruleta {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: 2rem auto;
+    border-radius: 50%;
+    overflow: visible;
+}
+
+/* Ruleta de colores (fondo) */
+.ruleta-plato {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transition: transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+    transform: rotate(0deg);
+    z-index: 1;
+}
+
+/* Ruleta de iconos (transparente) */
+.ruleta-iconos {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    background: transparent;
+    pointer-events: none;
+    transition: transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+    transform: rotate(0deg);
+}
+
+/* Posicionamiento de cada icono */
+.icono-seccion {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    left: 50%;
+    top: 50%;
+    transform-origin: 0 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Estilo de los iconos */
+.icono-ruleta {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
+    transform: translateX(-50%) rotate(90deg);
+}
+
+.ruleta-seccion {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    transform-origin: bottom right;
+    left: 0;
+    top: 0;
+    clip-path: polygon(0 0, 100% 0, 100% 100%);
+    overflow: visible;
+}
+
+.ruleta-aguja {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 30px solid #FF5722;
+    z-index: 10;
+    filter: drop-shadow(0 0 2px rgba(0,0,0,0.3));
+}
+
+.ruleta-mensaje {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--dark-green);
+    margin-top: 1rem;
+    animation: pulse 1.5s infinite;
+}
+
+/* Colores de las secciones */
+.seccion-1 { background: #FF5252; }
+.seccion-2 { background: #FF9800; }
+.seccion-3 { background: #FFEB3B; }
+.seccion-4 { background: #4CAF50; }
+.seccion-5 { background: #2196F3; }
+.seccion-6 { background: #3F51B5; }
+.seccion-7 { background: #9C27B0; }
+
+/* Estilos para preguntas y respuestas */
+#pregunta {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+#opciones button {
+    background: var(--white);
+    border: 2px solid var(--secondary-color);
+    color: var(--text-color);
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+#opciones button:hover {
+    background: var(--secondary-color);
+    color: white;
+    transform: scale(1.03);
+}
+
+/* Estilos para resultados */
+#resultado {
+    text-align: center;
+}
+
+.result-icon {
+    width: 100px;
+    height: 100px;
+    margin: 1rem auto;
+    display: block;
+}
+
+#mensaje-resultados {
+    font-size: 1.1rem;
+    margin: 1rem 0;
+    line-height: 1.6;
+}
+
+/* Animaciones */
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Clases de utilidad */
+.hidden {
+    display: none !important;
+}
+
+.trofeo-animado {
+    animation: bounce 0.5s ease infinite alternate;
+}
+
+.cara-triste {
+    animation: pulse 0.5s ease infinite alternate;
+}
+
+.animacion-flotar {
+    animation: float 3s ease-in-out infinite;
+}
+
+.animacion-latido {
+    animation: pulse 2s ease infinite;
+}
+
+.animacion-aparecer {
+    animation: fadeIn 0.8s ease forwards;
+}
+
+/* Estilos para preguntas */
+.pregunta-contenedor {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    margin: 0 auto 2rem;
+    max-width: 90%;
+}
+
+.pregunta-imagen {
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    margin: 0 auto 1rem;
+    display: block;
+    transition: all 0.3s ease;
+    border: 2px solid #4CAF50;
+    animation: pulse 2s infinite;
+}
+
+.pregunta-imagen:hover {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+}
+
+.texto-pregunta {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+    margin: 0;
+    padding: 0 1rem;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .options-grid {
+        grid-template-columns: 1fr;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .ruleta {
+        width: 250px;
+        height: 250px;
+    }
+}
+
+.mensaje-final {
+    font-size: 1.2rem;
+    color: var(--dark-green);
+    margin: 1rem 0;
+    font-weight: 600;
+    animation: pulse 1.5s infinite;
+}
+
+#resultado button {
+    margin-top: 1.5rem;
+}
+
+/* Debug de imágenes */
+.pregunta-contenedor:has(img[src=""])::before {
+    content: "Imagen no disponible";
+    color: #999;
+    font-style: italic;
+}
