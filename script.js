@@ -79,7 +79,7 @@ botonReinicio.addEventListener('click', reiniciarJuego);
 
 // Sistema de sonidos
 const sonidos = {
-    click: new Audio('sonidos/click.mp3'),  // Cambiado de .mpeg a .mp3
+    click: new Audio('sonidos/click.mp3'),
     ruleta: new Audio('sonidos/ruleta.mp3'),
     win: new Audio('sonidos/win.mp3'),
     lose: new Audio('sonidos/lose.mp3'),
@@ -119,17 +119,15 @@ function playSonido(tipo) {
         .then(() => console.log(`Reproduciendo sonido: ${tipo}`))
         .catch(e => {
             console.log(`Error al reproducir ${tipo}:`, e);
-            // Intentar activar sonidos nuevamente
             activarSonidos();
-            // Reintentar después de un breve retraso
             setTimeout(() => audio.play().catch(e => console.log("Reintento fallido:", e)), 300);
         });
 }
+
 // Activar sonidos
 function activarSonidos() {
     if (sonidosHabilitados) return;
     
-    // Intenta reproducir un sonido breve para desbloquear el audio
     const unlockAudio = () => {
         const sound = new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU...');
         sound.volume = 0;
@@ -137,6 +135,8 @@ function activarSonidos() {
             .then(() => {
                 sonidosHabilitados = true;
                 console.log("Audio desbloqueado");
+                document.getElementById('boton-sonido').textContent = "🔊 ON";
+                document.getElementById('boton-sonido').classList.add('active');
                 sound.remove();
             })
             .catch(e => {
@@ -144,61 +144,31 @@ function activarSonidos() {
             });
     };
     
-    // Intenta con el AudioContext primero
     try {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         const audioContext = new AudioContext();
-        
-        // Crea un nodo de ganancia silencioso
         const gainNode = audioContext.createGain();
         gainNode.gain.value = 0;
         gainNode.connect(audioContext.destination);
-        
-        // Crea un buffer vacío
         const buffer = audioContext.createBuffer(1, 1, 22050);
         const source = audioContext.createBufferSource();
         source.buffer = buffer;
         source.connect(gainNode);
-        
         source.start(0);
         sonidosHabilitados = true;
+        document.getElementById('boton-sonido').textContent = "🔊 ON";
+        document.getElementById('boton-sonido').classList.add('active');
         console.log("AudioContext activado");
     } catch (e) {
         console.log("Error con AudioContext:", e);
-        // Fallback al método simple
         unlockAudio();
     }
-}
-
-try {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    const audioContext = new AudioContext();
-    
-    // Crea un nodo de ganancia silencioso
-    const gainNode = audioContext.createGain();
-    gainNode.gain.value = 0;
-    gainNode.connect(audioContext.destination);
-    
-    // Crea un buffer vacío
-    const buffer = audioContext.createBuffer(1, 1, 22050);
-    const source = audioContext.createBufferSource();
-    source.buffer = buffer;
-    source.connect(gainNode);
-    
-    source.start(0);
-    sonidosHabilitados = true;
-    console.log("AudioContext activado");
-} catch (e) {
-    console.log("Error con AudioContext:", e);
-    // Fallback al método simple
-    unlockAudio();
 }
 
 // Inicialización
 document.addEventListener('DOMContentLoaded', function() {
     precargarSonidos();
     
-    // Activar sonidos con cualquier interacción
     document.addEventListener('click', function primeraInteraccion() {
         if (!interaccionInicial) {
             interaccionInicial = true;
@@ -208,15 +178,30 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Event Listener para el botón comenzar
+// Event Listeners
 document.getElementById('boton-empezar').addEventListener('click', iniciarJuego);
-
-// Event Listener para el botón siguiente
 document.getElementById('boton-siguiente').addEventListener('click', function() {
     playSonido('click');
     obtenerPreguntaAleatoria();
 });
 
+// Controlador para el botón de sonido
+document.getElementById('boton-sonido').addEventListener('click', function() {
+    sonidosHabilitados = !sonidosHabilitados;
+    this.textContent = sonidosHabilitados ? "🔊 ON" : "🔇 OFF";
+    this.classList.toggle('active', sonidosHabilitados);
+    
+    if (sonidosHabilitados) {
+        playSonido('click');
+    }
+});
+
+// Ajustar altura en móviles cuando aparece el teclado
+window.addEventListener('resize', () => {
+    if (window.visualViewport) {
+        document.documentElement.style.height = `${window.visualViewport.height}px`;
+    }
+});
 
 // Función para iniciar el juego
 function iniciarJuego() {
@@ -240,6 +225,9 @@ function mostrarRuleta() {
     document.getElementById('pregunta').classList.add('hidden');
     document.getElementById('opciones').classList.add('hidden');
     document.getElementById('resultado').classList.add('hidden');
+    
+    // Desactivar scroll en móviles durante la animación
+    document.body.style.overflow = 'hidden';
     
     const ruletaContainer = document.getElementById('ruleta-container');
     const ruletaPlato = document.querySelector('.ruleta-plato');
@@ -311,6 +299,9 @@ function mostrarRuleta() {
         preguntaActual = preguntasDisponibles[seccionAleatoria];
         preguntasMostradas.push(preguntas.indexOf(preguntaActual));
         mostrarPregunta(preguntaActual);
+        
+        // Restaurar scroll en móviles
+        document.body.style.overflow = '';
     }, 3000);
 }
 
