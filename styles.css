@@ -3,8 +3,9 @@
     --secondary-color: #81C784;
     --dark-green: #388E3C;
     --text-color: #333;
-    --bg-color: #f9f9f9;
     --white: #ffffff;
+    --container-opacity: 0.92;
+    --mobile-padding: 1rem;
 }
 
 * {
@@ -13,39 +14,94 @@
     box-sizing: border-box;
 }
 
-body {
-    font-family: 'Poppins', sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    line-height: 1.6;
+html, body {
+    width: 100%;
+    height: 100%;
     overflow-x: hidden;
 }
 
-.background-animation {
+body {
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-color);
+    line-height: 1.6;
+    min-height: 100vh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0;
+}
+
+/* Fondo animado con patrón y gradiente */
+body::before {
+    content: "";
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(255, 255, 255, 0.3) 100%);
+    background: 
+        linear-gradient(135deg, rgba(76, 175, 80, 0.08) 0%, rgba(255, 255, 255, 0.15) 100%),
+        url('imagenes-png/inn.png') center/200px 200px repeat;
+    z-index: -2;
+    animation: movimientoFondo 8s linear infinite;
+    opacity: 0.4;
+}
+
+/* Capa de color animada */
+body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, 
+        rgba(129, 199, 132, 0.1) 0%, 
+        rgba(76, 175, 80, 0.15) 50%, 
+        rgba(56, 142, 60, 0.1) 100%);
     z-index: -1;
+    animation: cambioColor 5s ease infinite;
+    background-size: 200% 200%;
+}
+
+@keyframes movimientoFondo {
+    0% { background-position: 0 0, 0 0; }
+    100% { background-position: 0 0, 200px 200px; }
+}
+
+@keyframes cambioColor {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 .container {
+    width: 100%;
     max-width: 800px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: var(--mobile-padding);
     text-align: center;
+    background-color: rgba(255, 255, 255, var(--container-opacity));
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(3px);
+    flex: 0 1 auto;
+    overflow-y: auto;
+    max-height: 100vh;
 }
 
 header {
     margin-bottom: 2rem;
+    position: relative;
+    z-index: 1;
 }
 
 h1 {
     font-size: 2.5rem;
     color: var(--primary-color);
     margin-bottom: 0.5rem;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 h1 span {
@@ -55,14 +111,16 @@ h1 span {
 .subtitle {
     font-size: 1.1rem;
     color: #666;
+    font-weight: 500;
 }
 
 .screen {
-    background: var(--white);
+    background: rgba(255, 255, 255, 0.95);
     border-radius: 15px;
     padding: 2rem;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
     margin: 1rem 0;
+    border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 #inicio {
@@ -82,18 +140,12 @@ h1 span {
     transition: all 0.3s ease;
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
 }
 
 .food-icon:hover {
     transform: scale(1.1);
-    filter: drop-shadow(0 0 8px rgba(76, 175, 80, 0.5));
-}
-
-@media (max-width: 768px) {
-    .food-icon {
-        width: 120px;
-        height: 120px;
-    }
+    filter: drop-shadow(0 0 12px rgba(76, 175, 80, 0.6));
 }
 
 .btn-primary {
@@ -106,10 +158,31 @@ h1 span {
     cursor: pointer;
     transition: all 0.3s;
     box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--dark-green);
+    z-index: -1;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+}
+
+.btn-primary:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
 }
 
 .btn-primary:hover {
-    background: var(--dark-green);
     transform: translateY(-3px);
     box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
 }
@@ -118,15 +191,18 @@ h1 span {
     background: var(--secondary-color);
     color: white;
     border: none;
-    padding: 10px 25px;
+    padding: 12px 25px;
     border-radius: 50px;
     cursor: pointer;
     transition: all 0.3s;
     margin-top: 1.5rem;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
 
 .btn-secondary:hover {
     background: var(--dark-green);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
 }
 
 .btn-sonido {
@@ -136,17 +212,23 @@ h1 span {
     background: var(--primary-color);
     color: white;
     border: none;
-    padding: 10px 15px;
-    border-radius: 20px;
+    padding: 12px;
+    border-radius: 50%;
     cursor: pointer;
     z-index: 1000;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
     transition: all 0.3s;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
 }
 
 .btn-sonido:hover {
     background: var(--dark-green);
-    transform: scale(1.05);
+    transform: scale(1.1);
 }
 
 .btn-sonido.active {
@@ -154,7 +236,6 @@ h1 span {
     box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.5);
 }
 
-/* Contenedor principal de la ruleta */
 .ruleta {
     position: relative;
     width: 300px;
@@ -162,9 +243,9 @@ h1 span {
     margin: 2rem auto;
     border-radius: 50%;
     overflow: visible;
+    filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));
 }
 
-/* Ruleta de colores (fondo) */
 .ruleta-plato {
     width: 100%;
     height: 100%;
@@ -172,9 +253,10 @@ h1 span {
     transition: transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99);
     transform: rotate(0deg);
     z-index: 1;
+    border-radius: 50%;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Ruleta de iconos (transparente) */
 .ruleta-iconos {
     width: 100%;
     height: 100%;
@@ -188,7 +270,6 @@ h1 span {
     transform: rotate(0deg);
 }
 
-/* Posicionamiento de cada icono */
 .icono-seccion {
     position: absolute;
     width: 50px;
@@ -201,13 +282,17 @@ h1 span {
     align-items: center;
 }
 
-/* Estilo de los iconos */
 .icono-ruleta {
     width: 40px;
     height: 40px;
     object-fit: contain;
-    filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
+    filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
     transform: translateX(-50%) rotate(90deg);
+    transition: transform 0.3s ease;
+}
+
+.icono-ruleta:hover {
+    transform: translateX(-50%) rotate(90deg) scale(1.2);
 }
 
 .ruleta-seccion {
@@ -219,6 +304,7 @@ h1 span {
     top: 0;
     clip-path: polygon(0 0, 100% 0, 100% 100%);
     overflow: visible;
+    transition: all 0.3s ease;
 }
 
 .ruleta-aguja {
@@ -232,7 +318,8 @@ h1 span {
     border-right: 15px solid transparent;
     border-top: 30px solid #FF5722;
     z-index: 10;
-    filter: drop-shadow(0 0 2px rgba(0,0,0,0.3));
+    filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.3));
+    animation: pulse 1.5s infinite;
 }
 
 .ruleta-mensaje {
@@ -241,9 +328,9 @@ h1 span {
     color: var(--dark-green);
     margin-top: 1rem;
     animation: pulse 1.5s infinite;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-/* Colores de las secciones */
 .seccion-1 { background: #FF5252; }
 .seccion-2 { background: #FF9800; }
 .seccion-3 { background: #FFEB3B; }
@@ -252,7 +339,6 @@ h1 span {
 .seccion-6 { background: #3F51B5; }
 .seccion-7 { background: #9C27B0; }
 
-/* Estilos para preguntas y respuestas */
 #pregunta {
     font-size: 1.3rem;
     font-weight: 600;
@@ -275,48 +361,51 @@ h1 span {
     font-size: 1rem;
     cursor: pointer;
     transition: all 0.3s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 #opciones button:hover {
     background: var(--secondary-color);
     color: white;
-    transform: scale(1.03);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Estilos para resultados */
 #resultado {
     text-align: center;
+    background: rgba(255, 255, 255, 0.95);
 }
 
 .result-icon {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     margin: 1rem auto;
     display: block;
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.2));
 }
 
 #mensaje-resultados {
     font-size: 1.1rem;
     margin: 1rem 0;
     line-height: 1.6;
+    padding: 0 1rem;
 }
 
-/* Animaciones */
 @keyframes bounce {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-10px); }
 }
 
 @keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
+    0% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.05); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.8; }
 }
 
 @keyframes float {
-    0% { transform: translateY(0); }
+    0% { transform: translateY(0px); }
     50% { transform: translateY(-10px); }
-    100% { transform: translateY(0); }
+    100% { transform: translateY(0px); }
 }
 
 @keyframes fadeIn {
@@ -324,17 +413,16 @@ h1 span {
     to { opacity: 1; transform: scale(1); }
 }
 
-/* Clases de utilidad */
 .hidden {
     display: none !important;
 }
 
 .trofeo-animado {
-    animation: bounce 0.5s ease infinite alternate;
+    animation: bounce 0.8s ease infinite alternate, pulse 1.5s ease infinite;
 }
 
 .cara-triste {
-    animation: pulse 0.5s ease infinite alternate;
+    animation: pulse 1s ease infinite alternate;
 }
 
 .animacion-flotar {
@@ -349,7 +437,6 @@ h1 span {
     animation: fadeIn 0.8s ease forwards;
 }
 
-/* Estilos para preguntas */
 .pregunta-contenedor {
     display: flex;
     flex-direction: column;
@@ -358,9 +445,21 @@ h1 span {
     padding: 1.5rem;
     background: white;
     border-radius: 15px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     margin: 0 auto 2rem;
     max-width: 90%;
+    position: relative;
+    overflow: hidden;
+}
+
+.pregunta-contenedor::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+    background: var(--primary-color);
 }
 
 .pregunta-imagen {
@@ -368,17 +467,19 @@ h1 span {
     height: 150px;
     object-fit: contain;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     margin: 0 auto 1rem;
     display: block;
     transition: all 0.3s ease;
     border: 2px solid #4CAF50;
     animation: pulse 2s infinite;
+    background: white;
+    padding: 10px;
 }
 
 .pregunta-imagen:hover {
     transform: scale(1.1) rotate(5deg);
-    box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
 }
 
 .texto-pregunta {
@@ -390,10 +491,19 @@ h1 span {
     padding: 0 1rem;
 }
 
-/* Estilos responsivos */
 @media (max-width: 768px) {
+    :root {
+        --container-opacity: 0.95;
+    }
+    
+    body::before {
+        background-size: 150px 150px;
+    }
+    
     .container {
         padding: 1rem;
+        margin: 10px auto;
+        border-radius: 10px;
     }
 
     .options-grid {
@@ -408,6 +518,74 @@ h1 span {
         width: 250px;
         height: 250px;
     }
+    
+    .food-icon {
+        width: 140px;
+        height: 140px;
+    }
+    
+    .screen {
+        padding: 1.5rem;
+    }
+    
+    .pregunta-imagen {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .btn-sonido {
+        width: 45px;
+        height: 45px;
+        bottom: 15px;
+        right: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    :root {
+        --mobile-padding: 0.8rem;
+        --container-opacity: 0.96;
+    }
+
+    body {
+        justify-content: flex-start;
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .container {
+        border-radius: 0;
+        min-height: 100vh;
+        max-width: 100%;
+        box-shadow: none;
+        padding-left: max(var(--mobile-padding), env(safe-area-inset-left));
+        padding-right: max(var(--mobile-padding), env(safe-area-inset-right));
+    }
+
+    body::before {
+        background-size: 120px 120px;
+        opacity: 0.1;
+    }
+    
+    .container {
+        padding: 0.8rem;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    .subtitle {
+        font-size: 1rem;
+    }
+    
+    .pregunta-contenedor {
+        padding: 1rem;
+    }
+    
+    .texto-pregunta {
+        font-size: 1.1rem;
+    }
 }
 
 .mensaje-final {
@@ -416,13 +594,13 @@ h1 span {
     margin: 1rem 0;
     font-weight: 600;
     animation: pulse 1.5s infinite;
+    padding: 0 1rem;
 }
 
 #resultado button {
     margin-top: 1.5rem;
 }
 
-/* Debug de imágenes */
 .pregunta-contenedor:has(img[src=""])::before {
     content: "Imagen no disponible";
     color: #999;
