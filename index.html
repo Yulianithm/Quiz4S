@@ -2,14 +2,13 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>NutriQuiz 4S</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 </head>
 <body>
-    <div class="background-animation"></div>
     <div class="container">
         <header>
             <h1 id="titulo" class="animate__animated animate__fadeInDown">NutriQuiz <span>4S</span></h1>
@@ -23,13 +22,8 @@
             </div>
             <div id="ruleta-container" class="screen hidden">
                 <div class="ruleta">
-                    <!-- Ruleta de colores (fondo) -->
                     <div class="ruleta-plato"></div>
-                    
-                    <!-- Ruleta de iconos (transparente) -->
                     <div class="ruleta-iconos"></div>
-                    
-                    <!-- Aguja -->
                     <div class="ruleta-aguja"></div>
                 </div>
                 <div class="ruleta-mensaje">Seleccionando pregunta...</div>
@@ -53,6 +47,7 @@
         </footer>
     </div>
     
+    <button id="boton-sonido" class="btn-sonido">🔊</button>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script src="script.js"></script>
 </body>
